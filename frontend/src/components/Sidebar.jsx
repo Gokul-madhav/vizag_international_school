@@ -38,7 +38,7 @@ const MENUS = {
       { label: "Dashboard", icon: IconGrid, to: "/student", end: true },
       { label: "My Courses", icon: IconBook, to: "/student/courses", soon: true },
       { label: "Timetable", icon: IconCalendar, to: "/student/timetable", soon: true },
-      { label: "Assignments", icon: IconClipboard, to: "/student/assignments", soon: true },
+      { label: "Assignments", icon: IconClipboard, to: "/student/assignments" },
       { label: "Exams & Results", icon: IconChart, to: "/student/results", soon: true },
       { label: "Attendance", icon: IconUsers, to: "/student/attendance", soon: true },
     ],

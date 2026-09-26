@@ -5,6 +5,7 @@ import { fetchAcademicsTree } from "./api.js";
 import { useSettings } from "./settings.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import StudentDashboard from "./pages/StudentDashboard.jsx";
+import StudentAssignments from "./pages/StudentAssignments.jsx";
 import TakeAssignment from "./pages/TakeAssignment.jsx";
 import Academics from "./pages/Academics.jsx";
 import AssignmentEditor from "./pages/AssignmentEditor.jsx";
@@ -81,6 +82,16 @@ export default function App() {
           <Layout role="student">
             <Gated flag="student_portal">
               <StudentDashboard />
+            </Gated>
+          </Layout>
+        }
+      />
+      <Route
+        path="/student/assignments"
+        element={
+          <Layout role="student">
+            <Gated flag="student_portal">
+              <StudentAssignments />
             </Gated>
           </Layout>
         }
