@@ -140,30 +140,6 @@ a {
   flex: 1;
 }
 
-.role-switch {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 4px;
-  display: flex;
-  gap: 4px;
-}
-
-.role-switch a {
-  flex: 1;
-  text-align: center;
-  padding: 8px 6px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-}
-
-.role-switch a.is-active {
-  background: var(--primary);
-  color: #fff;
-}
-
 /* ----------------------------- main ------------------------------- */
 
 .main {

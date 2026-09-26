@@ -95,17 +95,6 @@ export default function Sidebar({ role, open }) {
       <Group label="Others" items={menu.others} flags={flags} />
 
       <div className="sidebar__spacer" />
-
-      <div className="role-switch">
-        <NavLink to="/admin" className={({ isActive }) => (isActive ? "is-active" : "")}>
-          Admin
-        </NavLink>
-        {flags.student_portal !== false && (
-          <NavLink to="/student" className={({ isActive }) => (isActive ? "is-active" : "")}>
-            Student
-          </NavLink>
-        )}
-      </div>
     </aside>
   );
 }
