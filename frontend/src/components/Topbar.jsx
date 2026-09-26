@@ -1,6 +1,6 @@
 import { IconBell, IconMenu, IconSearch } from "./Icons.jsx";
 
-export default function Topbar({ user, onMenu }) {
+export default function Topbar({ user, onMenu, onLogout }) {
   return (
     <header className="topbar">
       <button className="hamburger" onClick={onMenu} aria-label="Open menu">
@@ -22,6 +22,11 @@ export default function Topbar({ user, onMenu }) {
           <div className="avatar">{user.avatar}</div>
           <span>{user.name}</span>
         </div>
+        {onLogout && (
+          <button className="btn-ghost btn-ghost--sm" onClick={onLogout}>
+            Sign out
+          </button>
+        )}
       </div>
     </header>
   );

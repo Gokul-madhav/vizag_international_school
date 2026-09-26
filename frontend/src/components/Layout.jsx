@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar.jsx";
 import Topbar from "./Topbar.jsx";
+import AdminLoginScreen from "./AdminLoginScreen.jsx";
+import { useAdminAuth } from "../adminAuth.jsx";
 import { useStudentAuth } from "../studentAuth.jsx";
 
 const ADMIN_USER = { name: "Principal's Office", avatar: "VIS" };
@@ -22,15 +24,24 @@ export default function Layout({ role, children }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { pathname } = useLocation();
   const { student } = useStudentAuth();
+  const { authed: adminAuthed, logout: adminLogout } = useAdminAuth();
 
   useEffect(() => {
     setDrawerOpen(false);
   }, [pathname]);
 
   // Before the student signs in there's no dashboard chrome — just the
-  // centred sign-in card on a bare page.
+  // centred sign-in card on a bare page. Same for admin, gated by the
+  // shared admin ID.
   if (role === "student" && !student) {
     return <div className="bare-page">{children}</div>;
+  }
+  if (role === "admin" && !adminAuthed) {
+    return (
+      <div className="bare-page">
+        <AdminLoginScreen />
+      </div>
+    );
   }
 
   const user =
@@ -47,7 +58,11 @@ export default function Layout({ role, children }) {
       />
 
       <div className="main">
-        <Topbar user={user} onMenu={() => setDrawerOpen((v) => !v)} />
+        <Topbar
+          user={user}
+          onMenu={() => setDrawerOpen((v) => !v)}
+          onLogout={role === "admin" ? adminLogout : undefined}
+        />
         <main className="content">{children}</main>
       </div>
     </div>

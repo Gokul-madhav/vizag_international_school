@@ -14,6 +14,7 @@ The admin sees these under Admin -> New Students (`/admin/new-students`).
 
 from __future__ import annotations
 
+import io
 import random
 import string
 import threading
@@ -21,10 +22,11 @@ import uuid
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from .academics import repo as academic_repo
-from .reports import _context
+from .reports import _context, _parse_dt
 from .students import DuplicateStudentId
 from .students import repo as students_repo
 
@@ -140,18 +142,25 @@ def create_lead(body: LeadIn):
     return {"student_id": student.get("student_id"), "lead_id": lead.get("id")}
 
 
-@router.get("")
-def list_leads():
-    ctx = _context()
+def _rows(ctx: dict, from_date: str | None = None, to_date: str | None = None) -> list[dict]:
+    lo = _parse_dt(f"{from_date}T00:00:00+00:00") if from_date else None
+    hi = _parse_dt(f"{to_date}T23:59:59.999999+00:00") if to_date else None
+
     rows = []
     for lead in lead_repo.list_all():
         st = ctx["student_by_pk"].get(lead.get("student_id"))
         if not st:
             continue
+        dt = _parse_dt(lead.get("created_at"))
+        if lo and (dt is None or dt < lo):
+            continue
+        if hi and (dt is None or dt > hi):
+            continue
         am = ctx["assignment_meta"].get(lead.get("assignment_id") or "")
         rows.append(
             {
                 "id": lead.get("id"),
+                "student_pk": st["id"],
                 "name": st["name"],
                 "student_id": st.get("student_id") or "",
                 "class_name": ctx["class_name"].get(st.get("class_id"), "—"),
@@ -163,4 +172,47 @@ def list_leads():
                 "created_at": lead.get("created_at"),
             }
         )
-    return {"leads": rows}
+    return rows
+
+
+@router.get("")
+def list_leads(from_date: str | None = None, to_date: str | None = None):
+    ctx = _context()
+    return {"leads": _rows(ctx, from_date, to_date)}
+
+
+@router.get("/export")
+def export_leads(from_date: str | None = None, to_date: str | None = None):
+    import openpyxl
+
+    ctx = _context()
+    rows = _rows(ctx, from_date, to_date)
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Outer Students"
+    headers = [
+        "Name", "Student ID", "Class", "Current School", "Previous %",
+        "Parent Name", "Parent Phone", "Came From", "Submitted At",
+    ]
+    ws.append(headers)
+    for r in rows:
+        ws.append(
+            [
+                r["name"], r["student_id"], r["class_name"], r["current_school"],
+                r["previous_percentage"], r["parent_name"], r["parent_phone"],
+                r["assignment_title"] or "", (r["created_at"] or "")[:19].replace("T", " "),
+            ]
+        )
+    for i, _ in enumerate(headers, 1):
+        ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = 20
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+
+    return StreamingResponse(
+        buf,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": 'attachment; filename="outer_students.xlsx"'},
+    )

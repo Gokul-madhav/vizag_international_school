@@ -210,4 +210,13 @@ export const submitPortalAttempt = (assignmentId, studentId, answers) =>
 
 export const createLead = (lead) => mutate("/api/leads", "POST", lead);
 
-export const fetchLeads = () => getJson("/api/leads", { leads: [] });
+export const fetchLeads = (fromDate = "", toDate = "") =>
+  getJson(
+    `/api/leads?from_date=${encodeURIComponent(fromDate)}&to_date=${encodeURIComponent(toDate)}`,
+    { leads: [] }
+  );
+
+export const leadsExportUrl = (fromDate = "", toDate = "") =>
+  `${BASE}/api/leads/export?from_date=${encodeURIComponent(fromDate)}&to_date=${encodeURIComponent(
+    toDate
+  )}`;
