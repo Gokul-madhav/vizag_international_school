@@ -89,7 +89,7 @@ export default function Sidebar({ role, open }) {
     <aside className={`sidebar ${open ? "sidebar--open" : ""}`}>
       <div className="brand">
         <div className="brand__mark">V</div>
-        <div className="brand__name">VIZAG INT'L</div>
+        <div className="brand__name">VIZAG INTERNATIONAL SCHOOL</div>
       </div>
 
       <Group label="Menu" items={menu.main} flags={flags} />
