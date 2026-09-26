@@ -19,8 +19,9 @@ const MENUS = {
     main: [
       { label: "Dashboard", icon: IconGrid, to: "/admin", end: true },
       { label: "Classes & Sections", icon: IconClipboard, to: "/admin/academics", flag: "academics" },
+      { label: "Assignments Manager", icon: IconBook, to: "/admin/assignments", flag: "assignments" },
       { label: "Students", icon: IconUsers, to: "/admin/students", flag: "students" },
-      { label: "New Students", icon: IconUsers, to: "/admin/new-students" },
+      { label: "Outer Students", icon: IconUsers, to: "/admin/new-students" },
       { label: "Teachers", icon: IconBook, to: "/admin/teachers", soon: true },
       { label: "Timetable", icon: IconCalendar, to: "/admin/timetable", soon: true },
       { label: "Examinations", icon: IconChart, to: "/admin/examinations" },

@@ -30,7 +30,7 @@ export default function NewStudents() {
     <>
       <div className="page-head">
         <div>
-          <h1 className="page-title">New Students</h1>
+          <h1 className="page-title">Outer Students</h1>
           <p className="page-sub">
             Prospective students who registered from the &ldquo;new&rdquo;
             sign-in flow — their generated Student ID lets them take the test

@@ -8,6 +8,7 @@ import StudentDashboard from "./pages/StudentDashboard.jsx";
 import StudentAssignments from "./pages/StudentAssignments.jsx";
 import TakeAssignment from "./pages/TakeAssignment.jsx";
 import Academics from "./pages/Academics.jsx";
+import AssignmentsManager from "./pages/AssignmentsManager.jsx";
 import AssignmentEditor from "./pages/AssignmentEditor.jsx";
 import Students from "./pages/Students.jsx";
 import Examinations from "./pages/Examinations.jsx";
@@ -43,6 +44,14 @@ export default function App() {
         element={adminRoute(
           <Gated flag="academics">
             <Academics />
+          </Gated>
+        )}
+      />
+      <Route
+        path="/admin/assignments"
+        element={adminRoute(
+          <Gated flag="assignments">
+            <AssignmentsManager />
           </Gated>
         )}
       />
